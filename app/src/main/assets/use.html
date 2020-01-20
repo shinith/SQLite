@@ -1,0 +1,162 @@
+<html>
+<title>
+</title>
+<head>
+<link  rel="stylesheet" type="text/css" href="css/materialize.css" />
+<script src="js/jquery-3.4.1.min.js"></script>
+<script src="js/materialize.min.js"></script>
+</head>
+<body>
+
+<style>
+html
+{background: #0081a5;}
+h4,h5,p,b
+{
+  color:#fff;
+}
+</style>
+
+  <div class="row" >
+    <div class="col s12" style="position:fixed;bottom:0; left:0; right:0; padding:0; background:#000; z-index:9999; border-top:2px solid #0081a5;">
+      <ul class="tabs" style="background:#eee;">
+       
+        <li class="tab col s3 "><a  href="#test2" class=" waves-effect">Purchase</a></li>
+        <li class="tab col s3"><a class="active waves-effect" href="#test1">Home</a></li>
+        <li class="tab col s3"><a href="#test3" class=" waves-effect" id="profileTab" >Profile</a></li>
+      </ul>
+    </div>
+
+
+    <div id="test1" class="col s12 " style="padding:0;">
+    <center><br>
+<b style="margin-top:20px; font-size:25px; color:#eee;">Guruji's Yoga</b>
+
+</center>
+
+
+
+<div class="home" style="padding:30px; padding-top:0px;">
+<center>
+<img src="img/icon.png" style="width:160px; " alt="">
+
+</center>
+
+<h5 style="margin-top:0;"> Do you feel Hopeless and Tired?
+</h5>
+<p>
+Meditation can help in curing all the diseases that are present in our body and will act as a shield for negative thoughts. A happy and sound body makes the day beautiful and energetic. A sound body repells the negative energy and attracts the positive ones. Do you like to learn on how to attract positive energy and make your day beautiful? 
+</p>
+
+  <br>
+<div class="row">
+
+    <div class="col s4">
+      <div class="card-panel waves-effect" style="width:100%; background:#eee; text-align:center; padding:24px 0;" onclick="location.href='cour.php'">
+      <img src="img/cour.png" style="width:50px;" alt=""><br>
+        <span class="">
+        COURSES
+        </span>
+      </div>
+    </div>
+
+    <div class="col s4">
+      <div class="card-panel waves-effect" style="width:100%; background:#eee; text-align:center; padding:24px 0;" onclick="location.href='abt.php'">
+      <img src="img/abt.png" style="width:50px;" alt=""><br>
+        <span class="">
+        ABOUT US
+        </span>
+      </div>
+    </div>
+
+
+    <div class="col s4">
+      <div class="card-panel waves-effect" style="width:100%; background:#eee; text-align:center; padding:24px 0;" onclick="location.href='des.php'">
+      <img src="img/des.png" style="width:50px;" alt=""><br>
+        <span class="">
+        WHY YOGA?
+        </span>
+      </div>
+    </div>
+
+    <div class="col s4">
+      <div class="card-panel waves-effect" style="width:100%; background:#eee; text-align:center; padding:24px 0;" onclick="location.href='news.php'">
+      <img src="img/med.png" style="width:50px;" alt=""><br>
+        <span class="">
+        MEDIA
+        </span>
+      </div>
+    </div>
+
+    
+    <div class="col s4">
+      <div class="card-panel waves-effect" style="width:100%; background:#eee; text-align:center; padding:24px 0;" onclick="location.href='cont.php'">
+      <img src="img/phn.png" style="width:50px;" alt=""><br>
+        <span class="">
+        CONTACT US
+        </span>
+      </div>
+    </div>
+
+    <div class="col s4">
+      <div class="card-panel waves-effect" style="width:100%; background:#eee; text-align:center; padding:24px 0;">
+      <img src="img/fb.png" style="width:50px;" alt=""><br>
+        <span class="">
+        FEEDBACK
+        </span>
+      </div>
+    </div>
+
+<!-- <img src="img/call.png"  onclick="javascript:AndroidInterface.SkypeCall();" style="position:fixed; bottom:70px; right:20px; z-index:9999; width:50px;" alt=""> -->
+<button class="btn waves-effect s06" onclick="javascript:AndroidInterface.SkypeCall();" style="left:5%; right:5%; width:90%; position:fixed; bottom:60px; z-index:9999; border-radius:5px; height:45px; color:#eee; background:#8bc34a;" name="action">Video Call
+  </button>
+
+<!-- <button class="btn waves-effect s06" onclick="javascript:AndroidInterface.StartPayment('<?php echo $order->id; ?>','Test');" style="border-radius:5px; height:35px; color:#0081a5; background:#eee;" name="action">Enroll Now
+  </button> -->
+
+    </div>
+
+</div>
+</div>
+<div id="test2" class="col s12" style="padding:0;">
+    
+     <!-- Element Showed -->
+
+
+    
+    </div>
+
+    <div id="test3" class="col s12" style="padding:30px;">
+
+
+    <button class="btn waves-effect  s06" style="width:100%; border-radius:8px; height:40px; background:#eee; color:#0081a5;" id="signout" name="action" onclick="javascript:AndroidInterface.Logout();">Sign Out
+  </button>
+
+    
+    </div>
+
+</body>
+<script>
+ 
+
+$(document).ready(function(){
+  $('.tabs').tabs();
+
+  var num='<?php echo $Num; ?>';
+ 
+  if(num.length>=10)
+{
+  $("#profileTab").html("Profile");
+
+}
+else
+{
+  $("#profileTab").html("Sign In");
+  $( "#profileTab" ).click(function() {
+    location.href='login.php';
+});
+}
+    
+  }); 
+</script>
+</html>

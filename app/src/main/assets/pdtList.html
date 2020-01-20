@@ -1,0 +1,359 @@
+<html>
+<title>List Of Items</title>
+<head>
+<link  rel="stylesheet" type="text/css" href="css/ghpages-materialize.css" />
+<link  rel="stylesheet" type="text/css" href="css/icon.css" />
+<link  rel="stylesheet" type="text/css" href="css/style.css" />
+<script src="js/jquery-3.4.1.min.js"></script>
+<script src="js/materialize.min.js"></script>
+<script src="js/jquery.dataTables.js"></script>
+</head>
+<body>
+ 
+
+    
+<script>
+(function(window, document, undefined) {
+
+var factory = function($, DataTable) {
+  "use strict";
+  /* Set the defaults for DataTables initialisation */
+  $.extend(true, DataTable.defaults, {
+    dom: "<'hiddensearch'f'>" +
+      "tr"+
+      "<'table-footer'Blip'>",
+    renderer: 'material'
+  });
+  /* Default class modification */
+  $.extend(DataTable.ext.classes, {
+    sWrapper: "dataTables_wrapper",
+    sFilterInput: "form-control input-sm",
+    sLengthSelect: "form-control input-sm"
+  });
+
+  /* Bootstrap paging button renderer */
+  DataTable.ext.renderer.pageButton.material = function(settings, host, idx, buttons, page, pages) {
+    var api = new DataTable.Api(settings);
+    var classes = settings.oClasses;
+    var lang = settings.oLanguage.oPaginate;
+    var btnDisplay, btnClass, counter = 0;
+
+    var attach = function(container, buttons) {
+      var i, ien, node, button;
+      var clickHandler = function(e) {
+        e.preventDefault();
+        if (!$(e.currentTarget).hasClass('disabled')) {
+          api.page(e.data.action).draw(false);
+        }
+      };
+
+      for (i = 0, ien = buttons.length; i < ien; i++) {
+        button = buttons[i];
+
+        if ($.isArray(button)) {
+          attach(container, button);
+        } else {
+          btnDisplay = '';
+          btnClass = '';
+
+          switch (button) {
+
+            case 'first':
+              btnDisplay = lang.sFirst;
+              btnClass = button + (page > 0 ?
+                '' : ' disabled');
+              break;
+
+            case 'previous':
+              btnDisplay = '<i class="material-icons">chevron_left</i>';
+              btnClass = button + (page > 0 ?
+                '' : ' disabled');
+              break;
+
+            case 'next':
+              btnDisplay = '<i class="material-icons">chevron_right</i>';
+              btnClass = button + (page < pages - 1 ?
+                '' : ' disabled');
+              break;
+
+            case 'last':
+              btnDisplay = lang.sLast;
+              btnClass = button + (page < pages - 1 ?
+                '' : ' disabled');
+              break;
+
+          }
+
+          if (btnDisplay) {
+            node = $('<li>', {
+                'class': classes.sPageButton + ' ' + btnClass,
+                'id': idx === 0 && typeof button === 'string' ?
+                  settings.sTableId + '_' + button : null
+              })
+              .append($('<a>', {
+                  'href': '#',
+                  'aria-controls': settings.sTableId,
+                  'data-dt-idx': counter,
+                  'tabindex': settings.iTabIndex
+                })
+                .html(btnDisplay)
+              )
+              .appendTo(container);
+
+            settings.oApi._fnBindAction(
+              node, {
+                action: button
+              }, clickHandler
+            );
+
+            counter++;
+          }
+        }
+      }
+    };
+
+    // IE9 throws an 'unknown error' if document.activeElement is used
+    // inside an iframe or frame.
+    var activeEl;
+
+    try {
+      // Because this approach is destroying and recreating the paging
+      // elements, focus is lost on the select button which is bad for
+      // accessibility. So we want to restore focus once the draw has
+      // completed
+      activeEl = $(document.activeElement).data('dt-idx');
+    } catch (e) {}
+
+    attach(
+      $(host).empty().html('<ul class="material-pagination"/>').children('ul'),
+      buttons
+    );
+
+    if (activeEl) {
+      $(host).find('[data-dt-idx=' + activeEl + ']').focus();
+    }
+  };
+
+  /*
+   * TableTools Bootstrap compatibility
+   * Required TableTools 2.1+
+   */
+  if (DataTable.TableTools) {
+    // Set the classes that TableTools uses to something suitable for Bootstrap
+    $.extend(true, DataTable.TableTools.classes, {
+      "container": "DTTT btn-group",
+      "buttons": {
+        "normal": "btn btn-default",
+        "disabled": "disabled"
+      },
+      "collection": {
+        "container": "DTTT_dropdown dropdown-menu",
+        "buttons": {
+          "normal": "",
+          "disabled": "disabled"
+        }
+      },
+      "print": {
+        "info": "DTTT_print_info"
+      },
+      "select": {
+        "row": "active"
+      }
+    });
+
+    // Have the collection use a material compatible drop down
+    $.extend(true, DataTable.TableTools.DEFAULTS.oTags, {
+      "collection": {
+        "container": "ul",
+        "button": "li",
+        "liner": "a"
+      }
+    });
+  }
+
+}; // /factory
+
+// Define as an AMD module if possible
+    if (typeof define === 'function' && define.amd) {
+      define(['jquery', 'datatables'], factory);
+    } else if (typeof exports === 'object') {
+      // Node/CommonJS
+      factory(require('jquery'), require('datatables'));
+    } else if (jQuery) {
+      // Otherwise simply initialise as normal, stopping multiple evaluation
+      factory(jQuery, jQuery.fn.dataTable);
+    }
+
+})(window, document);
+
+
+
+$(document).ready(function() {
+    $('.search-toggle').click(function() {
+    if ($('.hiddensearch').css('display') == 'none')
+      $('.hiddensearch').slideDown();
+    else
+      $('.hiddensearch').slideUp();
+  });    
+$('#datatable').dataTable({
+  "oLanguage": {
+    "sSearch": "",
+    "sSearchPlaceholder": "Search"
+  },
+  bAutoWidth: false,
+
+  });
+});
+</script>
+<div class="row">
+<div id="admin" class="container">
+    <div class="material-table">
+  <div class="table-header">
+    <span class="table-title">List Of Items</span>
+    <div class="actions">
+      <a href="#" class="search-toggle waves-effect btn-flat nopadding"><i class="material-icons">search</i></a>
+    </div>
+  </div>
+  <div class="card material-table">
+  <table id="datatable" class="striped">
+    <thead>
+      <tr>
+        <th>Si.No</th>
+        <th>Item</th>
+        <th>Category</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td>System Architect</td>
+        <td>Edinburgh</td>
+        <td>61</td>
+      </tr>
+     
+    </tbody>
+  </table>
+</div>
+</div>
+</div>
+<div class="fixed-action-btn">
+    <a class="btn-floating btn-large red">
+      <i class="large material-icons">add</i>
+    </a>
+</div>
+<br><br><br>
+</body>
+<script>
+ 
+
+$(document).ready(function(){
+var desedited=false;
+frmvalid=true;
+try{
+
+}catch(exp){
+console.log("exception o"+exp);
+}
+$(document).on("keyup","#txtPdtName",function(){
+if(!desedited){
+$("#txtPdtDesc").next("label").addClass("active");
+$("#txtPdtDesc").val($(this).val());
+}
+});
+$(document).on("change","#txtPdtDesc",function(){desedited=true;});
+$(document).on("click",".addBc",function(bc){
+bc.preventDefault();
+myhtml=$(this).html();
+if(myhtml=="remove_circle_outline"){
+  $(this).closest(".bcrow").remove(); 
+}
+else{
+var vEmptyTextBox = $(".bcinput").filter(function(){ return $.trim($(this).val()) == '';}).length;
+if(vEmptyTextBox>0){
+AndroidInterface.showToast("Please enter barcode value first");
+}
+else{
+cln=$(this).closest(".bcrow").clone();
+$(cln).find(".bcinput").val("");
+$(cln).appendTo("#bcWrap");
+}
+}
+$(".bcrow").each(function(index,elm){
+$(this).find("label").html("Barcode "+(index+1)); 
+$(this).find(".addBc").html("remove_circle_outline"); 
+});
+$(".addBc:last").html("add_circle_outline");
+});    
+
+//txtPdtName txtPdtDesc txtPdtUom txtPdtBrand txtPdtCost txtPdtPrice txtPdtRlvl txtpdtRqty txtPdtOqty
+$(document).on("submit","#frmPdt",function(evt){
+evt.preventDefault();
+frmvalid=true;
+$(".invalid").removeClass("invalid");
+$("#frmPdt .validate").each(function(){
+if(!$(this).val()){
+ frmvalid=false;
+$(this).addClass("invalid");
+console.log(this);
+ }
+});
+if(frmvalid){
+frmdat=$(this).serializeArray();
+var flds = {};
+ $.each(frmdat, function () {
+
+            if (flds[this.name]) {
+                if (!flds[this.name].push) {
+                    flds[this.name] = [flds[this.name]];
+                }
+                flds[this.name].push(this.value || '');
+            } else {
+                flds[this.name] = this.value || '';
+            }
+
+        });
+
+pdtupdt=AndroidInterface.updateProduct(JSON.stringify(flds));
+console.log(pdtupdt);
+if(pdtupdt){
+if(pdtupdt.indexOf("arcode") !== -1)
+$('.bcinput').addClass("invalid");
+AndroidInterface.showToast(pdtupdt);
+}
+else{
+AndroidInterface.showToast("Product Added successfully");
+
+}
+}else{
+AndroidInterface.showToast("All the fields are mandatory");
+}
+});
+
+$(document).on("blur",".bcinput",function(){
+var allValueArray = $('.bcinput').map(function() {
+if ($(this).val() != '')
+return $(this).val()
+}).get();
+var duplicateValueArray = allValueArray.filter(function(element, pos) {
+if(allValueArray.indexOf(element) != pos){
+return true;
+}
+else{
+return false;
+}
+});
+if(duplicateValueArray.length>0){
+$('.bcinput').addClass("invalid");
+AndroidInterface.showToast("Duplicate Barcodes");
+}else{
+bcvalid=AndroidInterface.validateBarcode(allValueArray);
+if(bcvalid){
+AndroidInterface.showToast(bcvalid);
+}
+}
+});
+
+  }); 
+</script>
+</html>

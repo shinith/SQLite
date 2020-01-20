@@ -1,0 +1,228 @@
+<html>
+<title>
+</title>
+<head>
+<link  rel="stylesheet" type="text/css" href="css/ghpages-materialize.css" />
+<link  rel="stylesheet" type="text/css" href="css/icon.css" />
+<link  rel="stylesheet" type="text/css" href="css/style.css" />
+<script src="js/jquery-3.4.1.min.js"></script>
+<script src="js/materialize.min.js"></script>
+</head>
+<body>
+<form id="frmPdt">
+  <input id="txtPdtId" name="txtPdtId" type="hidden">
+
+    <div class="row" >
+        <div class="col s12" style="position:fixed;bottom:0; left:0; right:0; padding-top:10px; background: #eee;  z-index:9999;">
+          <ul class="tabs" style="background:rgba(255, 255, 255, 0);">
+           
+            <li class="tab col s3 "><button class="waves-effect waves-light btn green darken-4" type="reset"><i class="material-icons left">redo</i>Clear</button></li>
+            <li class="tab col s3"><button class="waves-effect waves-light btn light-blue darken-4"><i class="material-icons left">save</i>Save</button></li>
+              <li class="tab col s3">  <button onclick="window.location.href='pdtList.html'" type="button" class="waves-effect waves-light btn red accent-4"><i class="material-icons left">cancel</i>Cancel</button></li>
+          </ul>
+        </div>
+    </div>
+
+    <div class="container">
+        <h5>Product Name</h5>
+        <div class="divider"></div>
+    </div>
+  <div class="container">
+
+
+      <div id="bcWrap">
+      <div class="bcrow input-field col s12">
+          <input id="txtPdtBcode" name="txtPdtBcode" type="text" class="bcinput validate">
+          <a href="#" class="addBc sufix material-icons">add_circle_outline</a>
+          <label for="txtPdtBcode">Barcode</label>
+      </div>
+     </div>
+      <div class="input-field col s12">
+          <input id="txtPdtName" name="txtPdtName" type="text" class="validate">
+          <label for="txtPdtName">Name</label>
+      </div>
+      <div class="input-field col s12">
+        <input id="txtPdtDesc" name="txtPdtDesc" type="text" class="validate">
+        <label for="txtPdtDesc">Description</label>
+      </div>
+      
+      <div class="input-field col s12"> 
+        <input id="txtpdtCat" name="txtpdtCat" type="text" class="validate">
+        <label for="txtpdtCat">Category</label>
+      </div>
+
+      <div class="input-field col s12">
+        <input id="txtPdtUom" name="txtPdtUom" type="text" class="validate">
+        <label for="txtPdtUom">UOM</label>
+      </div>
+      <div class="input-field col s12">
+        <input id="txtPdtBrand" name="txtPdtBrand" type="text" class="validate">
+        <label for="txtPdtBrand">Brand</label>
+      </div>
+      <div class="input-field col s12">
+        <input id="txtPdtCost" name="txtPdtCost" type="number" class="validate">
+        <label for="txtPdtCost">Unit Cost</label>
+      </div>
+
+      <div class="input-field col s12">
+        <input id="txtPdtPrice" name="txtPdtPrice" type="number" class="validate">
+        <label for="txtPdtPrice">Unit Price</label>
+      </div>
+
+      <div class="input-field col s12">
+        <input id="txtPdtRlvl" name="txtPdtRlvl" type="number" class="validate">
+        <label for="txtPdtRlvl">Reorder Level</label>
+      </div>
+
+      <div class="input-field col s12">
+        <input id="txtpdtRqty" name="txtpdtRqty" type="number" class="validate">
+        <label for="txtpdtRqty">Reorder Qty</label>
+      </div>
+
+      <div class="input-field col s12">
+        <input id="txtPdtOqty" name="txtPdtOqty" type="number" class="validate">
+        <label for="txtPdtOqty">Opening Qty</label>
+      </div>
+
+    </div>
+
+  
+</div>
+<br><br><br>
+</form>
+</body>
+<script>
+ 
+
+$(document).ready(function(){
+var desedited=false;
+frmvalid=true;
+try{
+var catlist=AndroidInterface.getCategories();
+catar=$.parseJSON(catlist);
+catdata={};
+$.each(catar,function(index,elm){
+catdata[elm.cat_name]=null;
+});
+$("#txtpdtCat").autocomplete({data: catdata});
+
+var brlist=AndroidInterface.getBrands();
+brar=$.parseJSON(brlist);
+brdata={};
+$.each(brar,function(index,elm){
+brdata[elm.br_name]=null;
+});
+$("#txtPdtBrand").autocomplete({data: brdata});
+var uomlist=AndroidInterface.getUom();
+uomar=$.parseJSON(uomlist);
+uomdata={};
+$.each(uomar,function(index,elm){
+uomdata[elm.uom_name]=null;
+});
+$("#txtPdtUom").autocomplete({data: uomdata});
+
+}catch(exp){
+console.log("exception o"+exp);
+}
+$(document).on("keyup","#txtPdtName",function(){
+if(!desedited){
+$("#txtPdtDesc").next("label").addClass("active");
+$("#txtPdtDesc").val($(this).val());
+}
+});
+$(document).on("change","#txtPdtDesc",function(){desedited=true;});
+$(document).on("click",".addBc",function(bc){
+bc.preventDefault();
+myhtml=$(this).html();
+if(myhtml=="remove_circle_outline"){
+  $(this).closest(".bcrow").remove(); 
+}
+else{
+var vEmptyTextBox = $(".bcinput").filter(function(){ return $.trim($(this).val()) == '';}).length;
+if(vEmptyTextBox>0){
+AndroidInterface.showToast("Please enter barcode value first");
+}
+else{
+cln=$(this).closest(".bcrow").clone();
+$(cln).find(".bcinput").val("");
+$(cln).appendTo("#bcWrap");
+}
+}
+$(".bcrow").each(function(index,elm){
+$(this).find("label").html("Barcode "+(index+1)); 
+$(this).find(".addBc").html("remove_circle_outline"); 
+});
+$(".addBc:last").html("add_circle_outline");
+});    
+
+//txtPdtName txtPdtDesc txtPdtUom txtPdtBrand txtPdtCost txtPdtPrice txtPdtRlvl txtpdtRqty txtPdtOqty
+$(document).on("submit","#frmPdt",function(evt){
+evt.preventDefault();
+frmvalid=true;
+$(".invalid").removeClass("invalid");
+$("#frmPdt .validate").each(function(){
+if(!$(this).val()){
+ frmvalid=false;
+$(this).addClass("invalid");
+console.log(this);
+ }
+});
+if(frmvalid){
+frmdat=$(this).serializeArray();
+var flds = {};
+ $.each(frmdat, function () {
+
+            if (flds[this.name]) {
+                if (!flds[this.name].push) {
+                    flds[this.name] = [flds[this.name]];
+                }
+                flds[this.name].push(this.value || '');
+            } else {
+                flds[this.name] = this.value || '';
+            }
+
+        });
+
+pdtupdt=AndroidInterface.updateProduct(JSON.stringify(flds));
+console.log(pdtupdt);
+if(pdtupdt){
+if(pdtupdt.indexOf("arcode") !== -1)
+$('.bcinput').addClass("invalid");
+AndroidInterface.showToast(pdtupdt);
+}
+else{
+AndroidInterface.showToast("Product Added successfully");
+
+}
+}else{
+AndroidInterface.showToast("All the fields are mandatory");
+}
+});
+
+$(document).on("blur",".bcinput",function(){
+var allValueArray = $('.bcinput').map(function() {
+if ($(this).val() != '')
+return $(this).val()
+}).get();
+var duplicateValueArray = allValueArray.filter(function(element, pos) {
+if(allValueArray.indexOf(element) != pos){
+return true;
+}
+else{
+return false;
+}
+});
+if(duplicateValueArray.length>0){
+$('.bcinput').addClass("invalid");
+AndroidInterface.showToast("Duplicate Barcodes");
+}else{
+bcvalid=AndroidInterface.validateBarcode(allValueArray);
+if(bcvalid){
+AndroidInterface.showToast(bcvalid);
+}
+}
+});
+
+  }); 
+</script>
+</html>
